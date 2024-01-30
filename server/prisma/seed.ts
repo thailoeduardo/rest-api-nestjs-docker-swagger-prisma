@@ -1,11 +1,10 @@
-// prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 async function main() {
-  // create two dummy recipes
+  // create two dummy users
   const user1 = await prisma.users.upsert({
     where: { email: 'user1@email.com' },
     update: {},
