@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-
+import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter';
 
 // Define the bootstrap function
 async function bootstrap() {
@@ -25,6 +25,12 @@ async function bootstrap() {
 
   // Setup Swagger module with the application instance and the Swagger document
   SwaggerModule.setup('api', app, document);
+
+  // const {HttpAdapterHost} = app.get(HttpAdapterHost);
+  // app.useGlobalFilters( new PrismaClientExceptionFilte(HttpAdapterHost))
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   // Start the application and listen for requests on port 3000
   await app.listen(3000);
