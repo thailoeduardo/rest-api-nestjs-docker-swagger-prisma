@@ -20,4 +20,9 @@ export class UsersEntity implements Users {
 
   @ApiProperty()
   updatedAt: Date;
+
+  password: string;
+  
+  @ApiProperty({ required: false, nullable: true })
+  article: []
 }

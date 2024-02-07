@@ -5,6 +5,7 @@ import {
 	IsOptional,
 	MaxLength,
 	IsEmail,
+	MinLength
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -25,4 +26,10 @@ export class CreateUserDto {
   @MaxLength(12)
   @ApiProperty()
 	phone?: string;
+
+	@IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @ApiProperty()
+  password: string;
 }
