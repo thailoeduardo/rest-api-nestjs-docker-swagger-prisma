@@ -16,7 +16,7 @@ export class CreateArticleDto {
   title: string;
 
 	@IsString()
-  @ApiProperty()
+  @ApiProperty({required: false })
   description: string;
   
 	@IsString()
@@ -24,8 +24,8 @@ export class CreateArticleDto {
   body: string;
 
 	@IsBoolean()
-  @ApiProperty()
-  published: boolean;
+	@ApiProperty({ required: false, default: false })
+  published: boolean = false
 
 	@ApiProperty()
   createdAt: Date;

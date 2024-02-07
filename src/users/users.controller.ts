@@ -21,19 +21,22 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @ApiCreatedResponse({ type: UsersEntity })
+  async create(@Body() createUserDto: CreateUserDto) {
+    return new UsersEntity(await this.usersService.create(createUserDto));
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @ApiOkResponse({ type: UsersEntity, isArray: true })
+  async findAll() {
+    const users = await this.usersService.findAll();
+    return users.map((user) => new UsersEntity(user));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: UsersEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOne(id);
+    const user = new UsersEntity(await this.usersService.findOne(id));
     if(!user) {
       throw new NotFoundException(`user ${id} does not exist.`)
     }
@@ -43,12 +46,16 @@ export class UsersController {
 
   @Patch(':id')
   @ApiCreatedResponse({ type: UsersEntity })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return new UsersEntity(await this.usersService.update(id, updateUserDto));
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+  @ApiOkResponse({ type: UsersEntity })
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return new UsersEntity(await this.usersService.remove(id));
   }
 }

@@ -12,18 +12,32 @@ export class ArticleService {
   }
 
   findAll() {
-    return this.prisma.article.findMany();
+    return this.prisma.article.findMany({
+      include: {
+        author: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.prisma.article.findUnique({ where: { id } });
+    return this.prisma.article.findUnique({
+      where: { id },
+      include: {
+        author: true,
+      },
+    });
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
-    return this.prisma.article.delete({ where: { id } });
+    return this.prisma.article.update({
+      where: {id},
+      data: updateArticleDto,
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} article`;
+    return this.prisma.article.delete({
+      where: {id}
+    })
   }
 }
