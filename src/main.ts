@@ -20,6 +20,7 @@ async function bootstrap() {
     .setTitle('Users API') // Set the title of the API
     .setDescription('Users API description') // Set the description of the API
     .setVersion('0.1') // Set the version of the API
+    .addBearerAuth() // Add bearer authentication to the API
     .build(); // Build the document
 
   // Create a Swagger document using the application instance and the document configuration

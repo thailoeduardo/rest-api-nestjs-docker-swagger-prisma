@@ -7,13 +7,15 @@ import {
   Param, 
   Delete,
   ParseIntPipe,
-  NotFoundException
+  NotFoundException,
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UsersEntity } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 @ApiTags('users')
@@ -27,6 +29,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UsersEntity, isArray: true })
   async findAll() {
     const users = await this.usersService.findAll();
@@ -34,6 +38,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UsersEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = new UsersEntity(await this.usersService.findOne(id));
@@ -45,6 +51,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: UsersEntity })
   async update(
     @Param('id', ParseIntPipe) id: number, 
@@ -54,6 +62,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UsersEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new UsersEntity(await this.usersService.remove(id));
